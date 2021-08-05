@@ -1,5 +1,5 @@
 let perticipent = {
-    name: "",
+    pname: "",
     catagory: "",
     contact: "",
     institution: "",
@@ -7,11 +7,11 @@ let perticipent = {
     paid: "",
     selected: "",
     t_shirt: "",
-    date: "",
+    reg_date: "",
   };
   
-  const perticipentCreation = (name,catagory,contact,institution,total,paid,selected,t_shirt,date) => {
-   perticipent.name=name;
+  const perticipentCreation = (pname,catagory,contact,institution,total,paid,selected,t_shirt,reg_date) => {
+   perticipent.pname=pname;
    perticipent.catagory=catagory;
    perticipent.contact=contact;
    perticipent.institution=institution;
@@ -19,6 +19,6 @@ let perticipent = {
    perticipent.paid=paid;
    perticipent.selected=selected;
    perticipent.t_shirt=t_shirt;
-   perticipent.date=date;
+   perticipent.reg_date=reg_date;
   };
   module.exports = { perticipent, perticipentCreation };

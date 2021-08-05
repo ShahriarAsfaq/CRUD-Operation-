@@ -27,6 +27,14 @@
           <div class="x_content">
             <br />
 
+          <%if(errors.length>0){%>
+              <div class="alert alert-danger">
+                <%errors.forEach(error=>{%> <%= error%><br />
+                <%})%>
+              </div>
+              <%}%>
+           
+
             <form
             method="POST"
             action="/perticipentRegister"
