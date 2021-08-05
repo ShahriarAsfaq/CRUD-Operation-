@@ -54,12 +54,17 @@
                 <td><%= perticipent.total %></td>
                 <td><%= perticipent.paid %></td>
                 <td><%if(perticipent.paid==perticipent.total){%>
-                  <p>Successful</p> 
+                  <p style="color: green;">Successful</p> 
                   <%}else{%>
-                  <p> Incomplete</p>
+                  <p style="color: red;"> Incomplete</p>
                   <%}%> 
                </td>
-               <td><%= perticipent.selected %></td>
+               <td><%if(perticipent.selected==true){%>
+                <p style="color: green;">Yes</p> 
+                <%}else{%>
+                <p style="color: red;">No</p>
+                <%}%> 
+              </td>
                 <td><%= perticipent.t_shirt %></td>
                 <td><%= perticipent.reg_date %></td>
                 <td><%const selectUrl= "/select/" + perticipent.id %>

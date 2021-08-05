@@ -25,3 +25,4 @@ router.get("/paymentDone/:id",ensureAuthenticated,addUserData, paymentDoneMo);
 router.get("/select/:id",ensureAuthenticated,addUserData,selectMo);
 
 module.exports = router;
+

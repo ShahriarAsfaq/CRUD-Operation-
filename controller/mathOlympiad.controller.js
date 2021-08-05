@@ -57,6 +57,7 @@ postMo = (req,res)=>{
             reg_date: new Date(),
           })
           .then(() => {
+            
             postgres("perticipents")
             .select ("*")
             .where("pname","=",name,"AND","contact","=",contact)
@@ -72,6 +73,8 @@ postMo = (req,res)=>{
                 user1[0].t_shirt,
                 user1[0].reg_date)
             })
+            errors.push("Success");
+            req.flash("errors", errors);
             res.redirect("/perticipentRegister");
             
           })
@@ -175,13 +178,39 @@ paymentDoneMo=(req,res)=>{
       })
       .then((user4)=>{  
         console.log("pay= ",pay);
-          console.log(user4);
+        res.redirect("/list");
       })
     
      
-    res.redirect("/list");
+    
 }
 selectMo=(req,res)=>{
-    res.redirect("/list");
+    const pid =req.params.id;
+    let errors=[];
+    const knex = require("knex");
+        const postgres = knex({
+          client: process.env.client,
+          connection: {
+            host: process.env.host,
+            user: process.env.user,
+            password: process.env.password,
+            database: process.env.database,
+          },
+        });
+        postgres("perticipents")
+        .where("id", "=", pid)
+        .update({
+            selected: true
+          })
+    .then((seluser)=>{
+        res.redirect("/list");
+    })
+    .catch((err) => {
+        errors.push("Can't delete");
+        console.log(err);
+        req.flash("errors", errors);
+        res.redirect("/list");
+      });
+    
 }
 module.exports={getMo,postMo,getMolist,deleteMo,paymentDoneMo,selectMo}
