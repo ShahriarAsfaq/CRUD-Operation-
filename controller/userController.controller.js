@@ -6,7 +6,7 @@ const passport = require("passport");
 const getRegister = (req, res) => {
   //console.log("asdsad", req.flash("errors"));
 
-  res.render("userViews/register-v2.ejs", { errors: req.flash("errors") });
+  res.render("users/register.ejs", { errors: req.flash("errors") });
 };
 
 const postRegister = (req, res) => {
@@ -29,8 +29,8 @@ const postRegister = (req, res) => {
     req.flash("errors", errors);
     res.redirect("/register");
   } else {
-    // console.log(name, email, password);
-    userCreation(name, email, password);
+    console.log(name, email, password);
+    
     const bcrypt = require("bcrypt-nodejs");
     const knex = require("knex");
     const postgres = knex({
@@ -45,16 +45,22 @@ const postRegister = (req, res) => {
     const hash = bcrypt.hashSync(password);
     postgres("users")
       .insert({
-        name: user.name,
-        email: user.email,
+        name: name,
+        email: email,
         password: hash,
       })
       .then(() => {
+        postgres("users")
+        .select ("*")
+        .where("email","=",email)
+        .then((user1)=>{
+          userCreation(user1[0].id,user1[0].name,user1[0].email,user1[0].password);
+        })
         res.redirect("/login");
       })
       .catch((err) => {
         errors.push("user already exists with this email");
-        console.log(err.detail);
+        console.log(err);
         req.flash("errors", errors);
         res.redirect("/register");
       });
@@ -62,7 +68,7 @@ const postRegister = (req, res) => {
 };
 
 const getLogin = (req, res) => {
-  res.render("userViews/login-v2.ejs", { error: req.flash("error") });
+  res.render("users/login.ejs", { error: req.flash("error") });
 };
 
 const postLogin = (req, res, next) => {
@@ -85,7 +91,7 @@ const getHomepage = (req, res) => {
 };
 const getDashboard = (req, res) => {
   const { user, userCreation } = require("./../model/userModel");
-  res.render("index.ejs", { user: user });
+  res.render("dashboard.ejs", { user: user });
   flag = false;
 };
 module.exports = {

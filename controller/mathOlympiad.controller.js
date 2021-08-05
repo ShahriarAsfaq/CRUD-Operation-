@@ -7,6 +7,20 @@ getMo = (req,res)=>{
     res.render("mathOlympiad/register.ejs");
 };
 postMo = (req,res)=>{
+    const {name,catagory,contact,institution,t_shirt,date} = req.body;
+    let registrationFee=0;
+    if(catagory="school"){
+        registrationFee=250;
+    }
+    else if (catagory="college"){
+        registrationFee=400;
+    }
+    else{
+        registrationFee=500;
+    }
+    let total=registrationFee;
+    let paid=0;
+    let selected = false;
     res.render("mathOlympiad/register.ejs");
 };
 getMolist = (req,res)=>{

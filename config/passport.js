@@ -45,9 +45,9 @@ module.exports = (passport) => {
   );
   passport.serializeUser((user, done) => {
     console.log(user);
-    done(null, user.id);
+    done(null, user);
   });
-  passport.deserializeUser((id, done) => {
-    done(null, id);
+  passport.deserializeUser((user, done) => {
+    done(null, user);
   });
 };

@@ -20,7 +20,7 @@ router.get("/login", getLogin);
 router.post("/login", postLogin);
 router.get("/register", getRegister);
 router.post("/register", postRegister);
-router.get("/dashboard", ensureAuthenticated,addUserData, getDashboard);
+router.get("/dashboard", ensureAuthenticated,addUserData,getDashboard);
 router.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/");
