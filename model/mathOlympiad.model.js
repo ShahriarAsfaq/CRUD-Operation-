@@ -2,6 +2,7 @@ let perticipent = {
     pname: "",
     catagory: "",
     contact: "",
+    email: "",
     institution: "",
     total: "",
     paid: "",
@@ -10,10 +11,11 @@ let perticipent = {
     reg_date: "",
   };
   
-  const perticipentCreation = (pname,catagory,contact,institution,total,paid,selected,t_shirt,reg_date) => {
+  const perticipentCreation = (pname,catagory,contact,email,institution,total,paid,selected,t_shirt,reg_date) => {
    perticipent.pname=pname;
    perticipent.catagory=catagory;
    perticipent.contact=contact;
+   perticipent.email=email;
    perticipent.institution=institution;
    perticipent.total=total;
    perticipent.paid=paid;
