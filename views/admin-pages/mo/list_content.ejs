@@ -41,6 +41,7 @@
             <th>Date</th>
             <th>Select</th>
             <th>Payment Done</th>
+            <th>Edit</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -81,6 +82,12 @@
                   <span class="fa fa-chevron"></span>
                   </a>
                   </td>
+                  <td><%const editUrl= "/edit/" + perticipent.id %>
+                    <a href="<%= editUrl %>"
+                    ><i class="fa fa-pencil"></i>
+                    <span class="fa fa-chevron"></span>
+                    </a>
+                    </td>
                 <td><%const deleteUrl= "/delete/" + perticipent.id %>
                 <a href="<%= deleteUrl %>"
                 ><i class="fa fa-trash"></i>
@@ -90,17 +97,6 @@
               </tr>
                 <%})%>
          <%}%>
-          <tr>
-            <td>Tiger</td>
-            <td>Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011/04/25</td>
-            <td>$320,800</td>
-            <td>5421</td>
-            <td>t.nixon@datatables.net</td>
-          </tr>
           
         </tbody>
       </table>

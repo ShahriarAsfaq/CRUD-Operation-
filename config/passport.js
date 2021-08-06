@@ -27,24 +27,24 @@ module.exports = (passport) => {
             data[0].email,
             data[0].password
           );
-          console.log(user);
+          //console.log(user);
           const isValid = bcrypt.compareSync(password, data[0].password);
           if (isValid) {
-            console.log(user);
+            //console.log(user);
             return done(null, user);
           } else {
-            console.log("passs");
+           // console.log("passs");
             return done(null, false, { message: "Password doesn't match" });
           }
         })
         .catch((err) => {
-          console.log("asdasd");
+          //console.log("asdasd");
           return done(null, false, { message: "This email is not registered" });
         });
     })
   );
   passport.serializeUser((user, done) => {
-    console.log(user);
+    //console.log(user);
     done(null, user);
   });
   passport.deserializeUser((user, done) => {

@@ -1,0 +1,99 @@
+<div class="right_col" role="main">
+    <div class="">
+  
+  <div class="col-md-12 col-sm-12 ">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>Math olympiad<small>Participent List</small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Settings 1</a>
+                <a class="dropdown-item" href="#">Settings 2</a>
+              </div>
+          </li>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+          <div class="row">
+              <div class="col-sm-12">
+                <div class="card-box table-responsive">
+  
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th>Team name</th>
+              <th>Institution</th>
+              <th>Coach's Name</th>
+              <th>Coach's Contact</th>
+              <th>Coach's Email</th>
+              <th>Coach's T-shirt</th>
+              <th>Leader's name</th>
+              <th>Leader's contact</th>
+              <th>Leader's Email</th>
+              <th>Leader's T-shirt</th>
+              <th>1st member's name</th>
+              <th>1st member's contact</th>
+              <th>1st member's Email</th>
+              <th>1st member's T-shirt</th>
+              <th>Selected</th>
+              <th>Select</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%if(perticipents.length>0){%>
+              <%perticipents.forEach(perticipent =>{%>
+                <tr>
+                  <td><%= perticipent.team_name %></td>
+                  <td><%= perticipent.institution_name %></td>
+                  <td><%= perticipent.coach_name %></td>
+                  <td><%= perticipent.coach_contact%></td>
+                  <td><%= perticipent.coach_email %></td>
+                  <td><%= perticipent.coach_t_shirt %></td>
+                  <td><%= perticipent.leader_name %></td>
+                  <td><%= perticipent.leader_contact %></td>
+                  <td><%= perticipent.leader_email %></td>
+                  <td><%= perticipent.leader_t_shirt%></td>
+                  <td><%= perticipent.member1_name %></td>
+                  <td><%= perticipent.member1_contact %></td>
+                  <td><%= perticipent.member1_email %></td>
+                  <td><%= perticipent.member1_t_shirt %></td>
+                 <td><%if(perticipent.selected==true){%>
+                  <p style="color: green;">Yes</p> 
+                  <%}else{%>
+                  <p style="color: red;">No</p>
+                  <%}%> 
+                </td>
+                  <td><%const selectUrl= "/pcselect/" + perticipent.team_id %>
+                    <a href="<%= selectUrl %>"
+                    ><i class="fa fa-check"></i>
+                    <span class="fa fa-chevron"></span>
+                    </a>
+                    </td>
+                  <td><%const deleteUrl= "/pcdelete/" + perticipent.team_id %>
+                  <a href="<%= deleteUrl %>"
+                  ><i class="fa fa-trash"></i>
+                  <span class="fa fa-chevron"></span>
+                  </a>
+                  </td>
+                </tr>
+                  <%})%>
+           <%}%>
+            
+          </tbody>
+        </table>
+  
+  
+      </div>
+    </div>
+  </div>
+  </div>
+    </div>
+  </div>

@@ -1,9 +1,16 @@
 
 
+const { render } = require("ejs");
 const {
 perticipent,
 perticipentCreation,
 } = require("./../model/mathOlympiad.model");
+
+
+const {
+  updatemo,
+  updatemoCreation,
+  } = require("./../model/updateModel.model");
 
 getMo = (req,res)=>{
     res.render("mathOlympiad/register.ejs",{ errors: req.flash("errors") });
@@ -171,17 +178,20 @@ paymentDoneMo=(req,res)=>{
     .then((user3)=>{
         
         pay=user3[0].total;
-    })
 
-    postgres("perticipents")
+        postgres("perticipents")
     .where("id", "=", pid)
     .update({
-        paid: 500
+        paid: pay
       })
       .then((user4)=>{  
         console.log("pay= ",pay);
         res.redirect("/list");
       })
+
+    })
+
+    
     
      
     
@@ -215,4 +225,62 @@ selectMo=(req,res)=>{
       });
     
 }
-module.exports={getMo,postMo,getMolist,deleteMo,paymentDoneMo,selectMo}
+
+getUpdateFormMo=()=>{
+
+}
+
+
+editMo= (req,res)=>{
+  const pid =req.params.id;
+  updatemoCreation(pid);
+  res.render("mathOlympiad/updateform.ejs");
+
+}
+postUpdateFormMo=(req,res)=>{
+  const {name,catagory,contact,email,institution,t_shirt} = req.body;
+  let registrationFee=0;
+    if(catagory=="school"){
+        registrationFee=250;
+    }
+    else if (catagory=="college"){
+        registrationFee=400;
+    }
+    else{
+        registrationFee=500;
+    }
+    let total=registrationFee;
+  let errors=[];
+    const knex = require("knex");
+        const postgres = knex({
+          client: process.env.client,
+          connection: {
+            host: process.env.host,
+            user: process.env.user,
+            password: process.env.password,
+            database: process.env.database,
+          },
+        });
+        postgres("perticipents")
+        .where("id", "=", updatemo.pid)
+        .update({
+          pname: name,
+          catagory: catagory,
+          contact: contact,
+          email: email,
+          institution: institution,
+          total: total,
+          t_shirt: t_shirt,
+          reg_date: new Date(),
+          })
+    .then((seluser)=>{
+        res.redirect("/list");
+    })
+    .catch((err) => {
+        errors.push("Can't delete");
+        console.log(err);
+        req.flash("errors", errors);
+        res.redirect("/list");
+      });
+}
+module.exports={getMo,postMo,getMolist,deleteMo,paymentDoneMo,selectMo,editMo,getUpdateFormMo,postUpdateFormMo}

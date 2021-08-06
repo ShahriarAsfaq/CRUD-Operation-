@@ -1,32 +1,31 @@
 
 
-const {
-    perticipent,
-    perticipentCreation,
-    } = require("./../model/programingContest.model");
+const perticipent= require("./../model/programingContest.model");
     
-    getPc = (req,res)=>{
-        res.render("ProgrammingContest/register.ejs",{ errors: req.flash("errors") });
-    };
-    postPc = (req,res)=>{
-        const {name,catagory,contact,email,institution,t_shirt} = req.body;
-        let registrationFee=0;
-        if(catagory=="school"){
-            registrationFee=250;
-        }
-        else if (catagory=="college"){
-            registrationFee=400;
-        }
-        else{
-            registrationFee=500;
-        }
-        let total=registrationFee;
-        let paid=0;
+const getPc = (req,res)=>{
+        console.log("get pc te dhukse");
+        res.render("ProgrammingContest/register.ejs");
+};
+const postPc = (req,res)=>{
+        const {team_name,
+        institution_name,
+        coach_name,
+        coach_contact,
+        coach_email,
+        coach_t_shirt,
+        leader_name,
+        leader_contact,
+        leader_email,
+        leader_t_shirt,
+        member1_name,
+        member1_contact,
+        member1_email,
+        member1_t_shirt} = req.body;
         let selected = false;
-        console.log(name," ",catagory," ",contact," ",email," ",institution," ",t_shirt);
+        //console.log(name," ",catagory," ",contact," ",email," ",institution," ",t_shirt);
     
         const errors = [];
-        if (!name || !email || !contact || !institution) {
+        if (!team_name || !leader_email || !leader_contact || !institution_name) {
           errors.push("All fields are required!");
         }
         if (errors.length > 0) {
@@ -44,37 +43,25 @@ const {
                 database: process.env.database,
               },
             });
-            postgres("perticipents")
+            postgres("pcperticipents")
               .insert({
-                pname: name,
-                catagory: catagory,
-                contact: contact,
-                email: email,
-                institution: institution,
-                total: total,
-                paid: paid,
+                team_name: team_name,
+                 institution_name: institution_name,
+                coach_name: coach_name,
+                coach_contact: coach_contact,
+                coach_email: coach_email,
+                coach_t_shirt: coach_t_shirt,
+                leader_name: leader_name,
+                leader_contact: leader_contact,
+                leader_email: leader_email,
+                leader_t_shirt: leader_t_shirt,
+                member1_name: member1_name,
+                member1_contact: member1_contact,
+                member1_email: member1_email,
+                member1_t_shirt: member1_t_shirt,
                 selected: selected,
-                t_shirt: t_shirt,
-                reg_date: new Date(),
               })
               .then(() => {
-                
-                postgres("perticipents")
-                .select ("*")
-                .where("pname","=",name,"AND","contact","=",contact)
-                .then((user1)=>{
-                  perticipentCreation(
-                    user1[0].pname,
-                    user1[0].catagory,
-                    user1[0].contact,
-                    user1[0].email,
-                    user1[0].institution,
-                    user1[0].total,
-                    user1[0].paid,
-                    user1[0].selected,
-                    user1[0].t_shirt,
-                    user1[0].reg_date)
-                })
                 errors.push("Success");
                 req.flash("errors", errors);
                 res.redirect("/pcperticipentRegister");
@@ -87,9 +74,9 @@ const {
                 res.redirect("/pcperticipentRegister");
               });
           }
-       // res.render("mathOlympiad/register.ejs");
     };
-    getPclist = (req,res)=>{
+
+const getPclist = (req,res)=>{
         let all_perticipent=[];
         let error="";
         const knex = require("knex");
@@ -103,7 +90,7 @@ const {
           },
         });
         
-            postgres("perticipents")
+            postgres("pcperticipents")
                 .select ("*")
             
             .then((user2) =>{
@@ -124,7 +111,7 @@ const {
                   });
         
     }
-    deletePc=(req,res)=>{
+const deletePc=(req,res)=>{
         const pid =req.params.id;
         let errors=[];
         const knex = require("knex");
@@ -137,8 +124,8 @@ const {
                 database: process.env.database,
               },
             });
-        postgres('perticipents')
-        .where('id','=', pid)
+        postgres('pcperticipents')
+        .where('team_id','=', pid)
         .del()
         .then((deluser)=>{
             res.redirect("/pclist");
@@ -152,7 +139,7 @@ const {
         
     }
     
-    paymentDonePc=(req,res)=>{
+const paymentDonePc=(req,res)=>{
         const pid =req.params.id;
         let pay=0;
         const knex = require("knex");
@@ -165,7 +152,7 @@ const {
                 database: process.env.database,
               },
             });
-        postgres("perticipents")
+        postgres("pcperticipents")
                 .select ("*")
                 .where("id","=",pid)
         .then((user3)=>{
@@ -173,7 +160,7 @@ const {
             pay=user3[0].total;
         })
     
-        postgres("perticipents")
+        postgres("pcperticipents")
         .where("id", "=", pid)
         .update({
             paid: 500
@@ -186,8 +173,9 @@ const {
          
         
     }
-    selectPc=(req,res)=>{
+const selectPc=(req,res)=>{
         const pid =req.params.id;
+        console.log("team id = ",pid);
         let errors=[];
         const knex = require("knex");
             const postgres = knex({
@@ -199,8 +187,8 @@ const {
                 database: process.env.database,
               },
             });
-            postgres("perticipents")
-            .where("id", "=", pid)
+            postgres("pcperticipents")
+            .where("team_id", "=", pid)
             .update({
                 selected: true
               })
@@ -215,4 +203,4 @@ const {
           });
         
     }
-    module.exports={getPc,postPc,getPclist,deletePc,paymentDonePc,selectPc}
+module.exports={getPc,postPc,getPclist,deletePc,paymentDonePc,selectPc}

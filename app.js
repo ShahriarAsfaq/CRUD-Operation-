@@ -6,6 +6,7 @@ const passport = require("passport");
 const app = express();
 const userRouter = require("./routes/userRoutes.routes");
 const moRouter = require("./routes/matholympiad.routes");
+const pcRouter = require("./routes/programingcontest.routes");
 require("./config/passport")(passport);
 
 app.use(express.static("public"));
@@ -26,6 +27,7 @@ app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(userRouter);
 app.use(moRouter);
+app.use(pcRouter);
 
 app.use((req, res) => {
   res.status(401).send("page doesn't exist");
