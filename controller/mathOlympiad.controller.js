@@ -1,4 +1,13 @@
-
+const knex = require("knex");
+let postgres = knex({
+  client: process.env.client,
+  connection: {
+    host: process.env.host,
+    user: process.env.user,
+    password: process.env.password,
+    database: process.env.database,
+  },
+});
 
 const { render } = require("ejs");
 const {
@@ -41,16 +50,7 @@ postMo = (req,res)=>{
         res.redirect("/perticipentRegister");
       }
       else {
-        const knex = require("knex");
-        const postgres = knex({
-          client: process.env.client,
-          connection: {
-            host: process.env.host,
-            user: process.env.user,
-            password: process.env.password,
-            database: process.env.database,
-          },
-        });
+        
         postgres("perticipents")
           .insert({
             pname: name,
@@ -99,16 +99,6 @@ postMo = (req,res)=>{
 getMolist = (req,res)=>{
     let all_perticipent=[];
     let error="";
-    const knex = require("knex");
-    const postgres = knex({
-      client: process.env.client,
-      connection: {
-        host: process.env.host,
-        user: process.env.user,
-        password: process.env.password,
-        database: process.env.database,
-      },
-    });
     
         postgres("perticipents")
             .select ("*")
@@ -162,16 +152,7 @@ deleteMo=(req,res)=>{
 paymentDoneMo=(req,res)=>{
     const pid =req.params.id;
     let pay=0;
-    const knex = require("knex");
-        const postgres = knex({
-          client: process.env.client,
-          connection: {
-            host: process.env.host,
-            user: process.env.user,
-            password: process.env.password,
-            database: process.env.database,
-          },
-        });
+ 
     postgres("perticipents")
             .select ("*")
             .where("id","=",pid)
@@ -199,16 +180,7 @@ paymentDoneMo=(req,res)=>{
 selectMo=(req,res)=>{
     const pid =req.params.id;
     let errors=[];
-    const knex = require("knex");
-        const postgres = knex({
-          client: process.env.client,
-          connection: {
-            host: process.env.host,
-            user: process.env.user,
-            password: process.env.password,
-            database: process.env.database,
-          },
-        });
+  
         postgres("perticipents")
         .where("id", "=", pid)
         .update({
@@ -251,16 +223,7 @@ postUpdateFormMo=(req,res)=>{
     }
     let total=registrationFee;
   let errors=[];
-    const knex = require("knex");
-        const postgres = knex({
-          client: process.env.client,
-          connection: {
-            host: process.env.host,
-            user: process.env.user,
-            password: process.env.password,
-            database: process.env.database,
-          },
-        });
+  
         postgres("perticipents")
         .where("id", "=", updatemo.pid)
         .update({

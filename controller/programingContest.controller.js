@@ -1,4 +1,13 @@
-
+const knex = require("knex");
+            let postgres = knex({
+              client: process.env.client,
+              connection: {
+                host: process.env.host,
+                user: process.env.user,
+                password: process.env.password,
+                database: process.env.database,
+              },
+            });
 
 const perticipent= require("./../model/programingContest.model");
     
@@ -33,16 +42,7 @@ const postPc = (req,res)=>{
             res.redirect("/pcperticipentRegister");
           }
           else {
-            const knex = require("knex");
-            const postgres = knex({
-              client: process.env.client,
-              connection: {
-                host: process.env.host,
-                user: process.env.user,
-                password: process.env.password,
-                database: process.env.database,
-              },
-            });
+         
             postgres("pcperticipents")
               .insert({
                 team_name: team_name,
@@ -79,16 +79,7 @@ const postPc = (req,res)=>{
 const getPclist = (req,res)=>{
         let all_perticipent=[];
         let error="";
-        const knex = require("knex");
-        const postgres = knex({
-          client: process.env.client,
-          connection: {
-            host: process.env.host,
-            user: process.env.user,
-            password: process.env.password,
-            database: process.env.database,
-          },
-        });
+       
         
             postgres("pcperticipents")
                 .select ("*")
@@ -114,16 +105,7 @@ const getPclist = (req,res)=>{
 const deletePc=(req,res)=>{
         const pid =req.params.id;
         let errors=[];
-        const knex = require("knex");
-            const postgres = knex({
-              client: process.env.client,
-              connection: {
-                host: process.env.host,
-                user: process.env.user,
-                password: process.env.password,
-                database: process.env.database,
-              },
-            });
+     
         postgres('pcperticipents')
         .where('team_id','=', pid)
         .del()
@@ -142,16 +124,7 @@ const deletePc=(req,res)=>{
 const paymentDonePc=(req,res)=>{
         const pid =req.params.id;
         let pay=0;
-        const knex = require("knex");
-            const postgres = knex({
-              client: process.env.client,
-              connection: {
-                host: process.env.host,
-                user: process.env.user,
-                password: process.env.password,
-                database: process.env.database,
-              },
-            });
+       
         postgres("pcperticipents")
                 .select ("*")
                 .where("id","=",pid)
@@ -177,16 +150,7 @@ const selectPc=(req,res)=>{
         const pid =req.params.id;
         console.log("team id = ",pid);
         let errors=[];
-        const knex = require("knex");
-            const postgres = knex({
-              client: process.env.client,
-              connection: {
-                host: process.env.host,
-                user: process.env.user,
-                password: process.env.password,
-                database: process.env.database,
-              },
-            });
+        
             postgres("pcperticipents")
             .where("team_id", "=", pid)
             .update({
