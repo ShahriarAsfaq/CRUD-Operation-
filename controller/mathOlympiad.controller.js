@@ -211,6 +211,26 @@ editMo= (req,res)=>{
 }
 postUpdateFormMo=(req,res)=>{
   const {name,catagory,contact,email,institution,t_shirt} = req.body;
+  /*
+  if(name==""){
+    name=perticipent.pname;
+  }
+  if(catagory==""){
+    catagory=perticipent.catagory;
+  }
+  if(contact==""){
+    contact=perticipent.contact;
+  }
+  if(email==""){
+    email=perticipent.email;
+  }
+  if(institution==""){
+  institution=perticipent.institution;
+  }
+  if(t_shirt==""){
+    t_shirt=perticipent.t_shirt;
+  }
+  */
   let registrationFee=0;
     if(catagory=="school"){
         registrationFee=250;
