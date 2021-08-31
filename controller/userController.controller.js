@@ -11,17 +11,17 @@ const getRegister = (req, res) => {
 
 const postRegister = (req, res) => {
   const { user, userCreation } = require("./../model/userModel");
-  const { name, email, password, retypedPassword } = req.body;
+  const { name, email, password, confirm_password } = req.body;
   //Data Validation
-  // console.log(name, email, password, retypedPassword);
+   console.log(name, email, password, confirm_password);
   const errors = [];
-  if (!name || !email || !password || !retypedPassword) {
+  if (!name || !email || !password || !confirm_password) {
     errors.push("All fields are required!");
   }
   if (password.length < 6) {
     errors.push("Password must be at least 6 characters!");
   }
-  if (password !== retypedPassword) {
+  if (password !== confirm_password) {
     errors.push("Passwords do not match!");
   }
 

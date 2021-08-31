@@ -1,3 +1,12 @@
+require("dotenv").config();
+const random = require("random");
+const { google } = require("googleapis");
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt-nodejs");
+CLIENT_ID = "938339187947-vlb3niun7nv2f7044677cepp4fjs1f3f.apps.googleusercontent.com";
+CLIENT_SECRET = "hHy81tKdKjUhKIlsARy9d-LY";
+REDIRECT_URI = "https://developers.google.com/oauthplayground";
+REFRESH_TOKEN = "1//04VDVw3gRf_PTCgYIARAAGAQSNwF-L9Ir_4glIXjT3uvIOGxnOOp70cpncl3CZJXDGFC9Bkgeh9EXTq8mcrtpF3KafC8S-9Jo8a8";
 const knex = require("knex");
 let postgres = knex({
   client: process.env.client,
@@ -20,6 +29,53 @@ const {
   updatemo,
   updatemoCreation,
   } = require("./../model/updateModel.model");
+
+
+  
+  
+  const oAuth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REDIRECT_URI
+  );
+  oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+  
+  async function autoMail(emailAddress, verficationCode) {
+    try {
+      vfCode = verficationCode.toString();
+      console.log(verficationCode);
+      const accessToken = await oAuth2Client.getAccessToken();
+      const transport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: "shahriarutsha@gmail.com",
+          clientId: CLIENT_ID,
+          clientSecret: CLIENT_SECRET,
+          refreshToken: REFRESH_TOKEN,
+          accessToken: accessToken,
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      });
+  
+      const mailOptions = {
+        from: "ICT_Fest<shahriarutsha@gmail.com>",
+        to: emailAddress,
+        subject: "Verification ID",
+        text: vfCode,
+        html:
+          " <b>Hi!<br> <p> Registering for ICT FEST Math Olympiad.<br><h4>Your verification code is :</h4><h1><t>" +
+          vfCode +
+          "</h1> <t><p>This is an automated email. Please do not reply to this email</p>.",
+      };
+      const result = await transport.sendMail(mailOptions);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  }
 
 getMo = (req,res)=>{
     res.render("mathOlympiad/register.ejs",{ errors: req.flash("errors") });
@@ -50,7 +106,9 @@ postMo = (req,res)=>{
         res.redirect("/perticipentRegister");
       }
       else {
-        
+        const verf_id = random.int((min = 1111), (max = 9999));
+        console.log(verf_id);
+        autoMail(email,verf_id);
         postgres("perticipents")
           .insert({
             pname: name,
