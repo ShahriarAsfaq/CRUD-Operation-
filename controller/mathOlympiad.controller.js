@@ -3,6 +3,7 @@ const random = require("random");
 const { google } = require("googleapis");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt-nodejs");
+const bcrypt1 = require("bcryptjs");
 CLIENT_ID = "938339187947-vlb3niun7nv2f7044677cepp4fjs1f3f.apps.googleusercontent.com";
 CLIENT_SECRET = "hHy81tKdKjUhKIlsARy9d-LY";
 REDIRECT_URI = "https://developers.google.com/oauthplayground";
@@ -40,7 +41,7 @@ const {
   );
   oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
   
-  async function autoMail(emailAddress, verficationCode) {
+  async function autoMail(name,emailAddress, verficationCode) {
     try {
       vfCode = verficationCode.toString();
       console.log(verficationCode);
@@ -66,7 +67,7 @@ const {
         subject: "Verification ID",
         text: vfCode,
         html:
-          " <b>Hi!<br> <p> Registering for ICT FEST Math Olympiad.<br><h4>Your verification code is :</h4><h1><t>" +
+          " <b>Hello, Mr. "+name+"<br> <p> Registering for ICT FEST Math Olympiad.<br><h4>Your verification code is :</h4><h1><t>" +
           vfCode +
           "</h1> <t><p>This is an automated email. Please do not reply to this email</p>.",
       };
@@ -80,7 +81,7 @@ const {
 getMo = (req,res)=>{
     res.render("mathOlympiad/register.ejs",{ errors: req.flash("errors") });
 };
-postMo = (req,res)=>{
+postMo = async(req,res)=>{
     const {name,catagory,contact,email,institution,t_shirt} = req.body;
     let registrationFee=0;
     if(catagory=="school"){
@@ -106,9 +107,13 @@ postMo = (req,res)=>{
         res.redirect("/perticipentRegister");
       }
       else {
-        const verf_id = random.int((min = 1111), (max = 9999));
-        console.log(verf_id);
-        autoMail(email,verf_id);
+        //const verf_id = random.int((min = 1111), (max = 9999));
+       // console.log(verf_id);
+        
+        let salt = await bcrypt1.genSalt(32);
+        const verf_id = salt+"SUS";
+        autoMail(name,email,verf_id);
+        console.log("salt = ",verf_id);
         postgres("perticipents")
           .insert({
             pname: name,
@@ -121,6 +126,7 @@ postMo = (req,res)=>{
             selected: selected,
             t_shirt: t_shirt,
             reg_date: new Date(),
+            verificationID: verf_id,
           })
           .then(() => {
             
@@ -138,8 +144,14 @@ postMo = (req,res)=>{
                 user1[0].paid,
                 user1[0].selected,
                 user1[0].t_shirt,
-                user1[0].reg_date)
-            })
+                user1[0].reg_date
+                )
+                
+                //const vid = user1[0].id;
+                //const binid = vid.toString(2);
+                //console.log("id size= ",binid.toString().length);
+
+              })
             errors.push("Success");
             req.flash("errors", errors);
             res.redirect("/perticipentRegister");

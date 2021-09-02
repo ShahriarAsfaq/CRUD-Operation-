@@ -1,3 +1,11 @@
+const { google } = require("googleapis");
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt-nodejs");
+const bcrypt1 = require("bcryptjs");
+CLIENT_ID = "938339187947-vlb3niun7nv2f7044677cepp4fjs1f3f.apps.googleusercontent.com";
+CLIENT_SECRET = "hHy81tKdKjUhKIlsARy9d-LY";
+REDIRECT_URI = "https://developers.google.com/oauthplayground";
+REFRESH_TOKEN = "1//04VDVw3gRf_PTCgYIARAAGAQSNwF-L9Ir_4glIXjT3uvIOGxnOOp70cpncl3CZJXDGFC9Bkgeh9EXTq8mcrtpF3KafC8S-9Jo8a8";
 const knex = require("knex");
             let postgres = knex({
               client: process.env.client,
@@ -10,12 +18,57 @@ const knex = require("knex");
             });
 
 const perticipent= require("./../model/programingContest.model");
+
+
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
+);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+async function autoMail(team_name,leader_emailAddress,member1_email, verficationCode) {
+  try {
+    vfCode = verficationCode.toString();
+    const accessToken = await oAuth2Client.getAccessToken();
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: "shahriarutsha@gmail.com",
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    const mailOptions = {
+      from: "ICT_Fest<shahriarutsha@gmail.com>",
+      to: leader_emailAddress,
+      cc: member1_email,
+      subject: "Verification ID",
+      text: vfCode,
+      html:
+        " <b>Hello, Team "+team_name+"<br> <p> Registering for ICT FEST Programming Contest.<br><h4>Your verification code is :</h4><h1><t>" +
+        vfCode +
+        "</h1> <t><p>This is an automated email. Please do not reply to this email</p>.",
+    };
+    const result = await transport.sendMail(mailOptions);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
     
 const getPc = (req,res)=>{
         console.log("get pc te dhukse");
         res.render("ProgrammingContest/register.ejs");
 };
-const postPc = (req,res)=>{
+const postPc = async(req,res)=>{
         const {team_name,
         institution_name,
         coach_name,
@@ -42,6 +95,9 @@ const postPc = (req,res)=>{
             res.redirect("/pcperticipentRegister");
           }
           else {
+            let salt = await bcrypt1.genSalt(32);
+            const verf_id = salt+"SUS";
+            autoMail(team_name,leader_email,member1_email,verf_id);
          
             postgres("pcperticipents")
               .insert({
@@ -60,6 +116,7 @@ const postPc = (req,res)=>{
                 member1_email: member1_email,
                 member1_t_shirt: member1_t_shirt,
                 selected: selected,
+                verificationID: verf_id,
               })
               .then(() => {
                 errors.push("Success");

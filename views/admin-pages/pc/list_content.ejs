@@ -29,6 +29,7 @@
           <thead>
             <tr>
               <th>Team name</th>
+              <th>VerificationID</th>
               <th>Institution</th>
               <th>Coach's Name</th>
               <th>Coach's Contact</th>
@@ -52,6 +53,7 @@
               <%perticipents.forEach(perticipent =>{%>
                 <tr>
                   <td><%= perticipent.team_name %></td>
+                  <td><%= perticipent.verificationID %></td>
                   <td><%= perticipent.institution_name %></td>
                   <td><%= perticipent.coach_name %></td>
                   <td><%= perticipent.coach_contact%></td>
